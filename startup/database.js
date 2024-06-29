@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 
 module.exports = function () {
-    const connectionStr = "******";
-
-    // mongoose.set("strictQuery", true);
-
+    const connectionStr = process.env.MONGO_DB;
     mongoose.connect(connectionStr);
 }
