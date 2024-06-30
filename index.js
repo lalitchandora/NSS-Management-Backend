@@ -4,7 +4,7 @@ const app = express();
 const PORT = 3000
 
 const routes = require("./startup/routes");
-
+app.use(express.json());
 app.use("/api", routes);
 require("./startup/database")()
 
