@@ -4,20 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('../services/jwt');
 const User = require("../models/user.model");
 
-router.get('/login', (req, res) => {
-    res.status(200).json({ hello: 'login' });
-})
-
-router.get('/signup', async (req, res) => {
-    const user = new User({
-        name: "lala",
-        user_type: "admin"
-    })
-    await user.save();
-    res.status(200).json({ hello: 'signup' });
-})
-
-
 router.post('/signup', async (req, res) => {
     const { name, email, password, user_type } = req.body;
     try {
@@ -37,6 +23,7 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+	console.log(email, password);
     try {
         const user = await User.findOne({ email });
         if (!user) {
