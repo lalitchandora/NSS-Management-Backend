@@ -1,15 +1,18 @@
 const express = require('express');
-require("dotenv").config({ path: "./config/.env" });
+require('dotenv').config({ path: './config/.env' });
 const app = express();
-const PORT = 3000
-const cors = require("cors")
-const routes = require("./startup/routes");
+const PORT = process.env.PORT || 3000;
+const cors = require("cors");
+
+const routes = require('./startup/routes');
+const connectDB = require('./startup/database');
 
 app.use(express.json());
 app.use(cors());
-app.use("/api", routes);
-require("./startup/database")()
+app.use('/api', routes);
 
-app.listen(PORT, (req, res) => {
-    console.log('Server started on port', PORT);
-})
+connectDB();
+
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+});
