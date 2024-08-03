@@ -23,7 +23,7 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-	console.log(email, password);
+    console.log(email, password);
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -34,7 +34,14 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
         const token = jwt.generateToken(user);
-        res.status(200).json({ token });
+        res.status(200).json({ 
+            token,
+            user: {
+                email: user.email,
+                name: user.name,
+                user_type: user.user_type
+            }
+        });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
