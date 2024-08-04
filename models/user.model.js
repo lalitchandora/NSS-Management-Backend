@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
     password: {
         type: String,
@@ -18,10 +18,29 @@ const userSchema = mongoose.Schema({
     user_type: {
         type: String,
         required: true
-    }
+    },
+    adminApproved: {
+        type: Boolean,
+        required: true
+    },
+    totalHrs: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    uid: {
+        type: String,
+    },
+    year: {
+        type: String
+    },
+    course: {
+        type: String
+    },
+
 })
 // Pre-save middleware to hash password
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         return next();
     }
@@ -31,7 +50,7 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to compare given password with hashed password
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 const User = mongoose.model("User", userSchema);
