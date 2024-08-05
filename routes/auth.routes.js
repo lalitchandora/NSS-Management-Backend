@@ -21,26 +21,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// router.post("/login", async (req, res) => {
-//   const { email, password } = req.body;
-//   console.log(email, password);
-//   try {
-//     console.log("data", await User.find());
-//     const user = await User.findOne({ email, adminApproved: true });
-//     if (!user) {
-//       return res.status(400).json({ error: "Invalid email or password" });
-//     }
-//     const isMatch = await user.comparePassword(password);
-//     if (!isMatch) {
-//       return res.status(400).json({ error: "Invalid email or password" });
-//     }
-//     const token = jwt.generateToken(user);
-//     res.status(200).json({ token });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -52,16 +32,11 @@ router.post('/login', async (req, res) => {
         }
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid email or password' });
+          return res.status(400).json({ error: 'Invalid email or password' });
         }
         const token = jwt.generateToken(user);
-        res.status(200).json({ 
-            token,
-            user: {
-                email: user.email,
-                name: user.name,
-                user_type: user.user_type
-            }
+        res.status(200).json({
+          token
         });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });

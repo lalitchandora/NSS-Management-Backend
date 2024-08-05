@@ -9,6 +9,7 @@ const userRoutes = require('../routes/user.routes');
 const galleryRoutes = require('../routes/eventGallery.routes');
 const reportRoutes = require('../routes/reports.routes');
 const postRoutes = require('../routes/post.routes');
+const certificateRoutes = require('../routes/certificate.routes');
 
 router.use('/auth', authRoutes);
 router.use('/events', eventRoutes);
@@ -18,4 +19,5 @@ router.use('/profile', userRoutes);
 router.use('/gallery', galleryRoutes);
 router.use('/reports', reportRoutes);
 router.use('/posts', postRoutes); 
+router.use('/certificate', certificateRoutes)
 module.exports = router;
