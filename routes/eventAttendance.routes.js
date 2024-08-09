@@ -8,12 +8,13 @@ const router = express.Router();
 router.post('/create', authorization, async (req, res) => {
     const { eventId, status } = req.body;
     const userId = req.user.id;
+    const actualAttendance = (status == 'accepted') ? true : false;
     try {
         const existingAttendance = await EventAttendance.findOne({ eventId, userId });
         if (existingAttendance) {
             return res.status(400).json({ error: 'Attendance already recorded for this user and event' });
         }
-        const attendance = new EventAttendance({ eventId, userId, status });
+        const attendance = new EventAttendance({ eventId, userId, status, actualAttendance });
         await attendance.save();
         res.status(201).json({ message: 'Attendance recorded successfully', attendance });
     } catch (error) {
@@ -38,13 +39,13 @@ router.put('/actual/:id', authorization, async (req, res) => {
 });
 
 // Get attendance by event ID
-router.get('/event/:eventId', async (req, res) => {
+router.get('/event/:eventId', authorization, async (req, res) => {
     const { eventId } = req.params;
     try {
-        const attendance = await EventAttendance.find({ eventId }).populate('userId', 'name email');
+        const attendance = await EventAttendance.find({ eventId, userId: req.user.id }).populate('userId', 'name email');
         res.status(200).json(attendance);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to get attendance' });
+        res.status(500).json({ error: 'Failed to get attendance' + error });
     }
 });
 

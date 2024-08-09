@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema({
     },
     adminApproved: {
         type: Boolean,
+        default: true,
         required: true
     },
     totalHrs: {

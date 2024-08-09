@@ -2,6 +2,7 @@ const exceljs = require("exceljs");
 
 function generateXLS(data, year) {
     try {
+        console.log("asdfl")
         const workbook = new exceljs.Workbook();
         const worksheet = workbook.addWorksheet("Grace Marks" + year, {
             pageSetup: { paperSize: 9, orientation: "landscape" }

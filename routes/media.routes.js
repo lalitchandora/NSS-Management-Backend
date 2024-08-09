@@ -6,7 +6,7 @@ const authorization = require("../middleware/authorization")
 
 const router = express.Router();
 
-router.post('/file', authorization, async (req, res) => {
+router.post('/file', async (req, res) => {
     const filename = req.body.filePath;
     const fullPath = path.join(__dirname, '..', filename);
     console.log(fullPath, "hii");

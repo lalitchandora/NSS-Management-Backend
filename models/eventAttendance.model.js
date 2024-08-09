@@ -22,7 +22,7 @@ const eventAttendanceSchema = new mongoose.Schema({
     },
     actualAttendance: {
         type: Boolean,
-        default: false
+        required: true
     }
 });
 

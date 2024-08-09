@@ -3,6 +3,7 @@ const Event = require("../models/event.model");
 const { adminOnly } = require("../middleware/authorization");
 const { getEventStatus } = require("../utility");
 const upload = require("../startup/storage");
+const EventGallery = require("../models/eventGallery.model");
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.post("/add", [adminOnly, upload.single('photo')], async (req, res) => {
       title,
       hrs,
       type,
-      photo: req.file ? req.file.path : undefined,
+      photo: req.file ? req.file.filename : undefined,
       description,
       volunteersRequired,
       dateTime,
@@ -90,32 +91,32 @@ router.put("/update/:id", [adminOnly, upload.single('photo')], async (req, res) 
 router.get("/all", async (req, res) => {
   try {
     const events = await Event.find();
-    let ongoing = [];
-    let past = [];
-    let future = [];
-    events.forEach(event => {
-      switch (getEventStatus(event.dateTime)) {
-        case "upcoming":
-          future.push(event._doc);
-          break;
-        case "ongoing":
-          ongoing.push(event._doc);
-          break;
-        case "past":
-          past.push(event._doc);
-          break;
-        default:
-          break;
-      }
-    })
+    // let ongoing = [];
+    // let past = [];
+    // let future = [];
+    // events.forEach(event => {
+    //   switch (getEventStatus(event.dateTime)) {
+    //     case "upcoming":
+    //       future.push(event._doc);
+    //       break;
+    //     case "ongoing":
+    //       ongoing.push(event._doc);
+    //       break;
+    //     case "past":
+    //       past.push(event._doc);
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // })
 
-    const eventsObj = {
-      upcoming: future,
-      ongoing: ongoing,
-      past: past
-    }
+    // const eventsObj = {
+    //   upcoming: future,
+    //   ongoing: ongoing,
+    //   past: past
+    // }
 
-    res.status(200).json(eventsObj);
+    res.status(200).json({ eventsArr: events });
   } catch (error) {
     res.status(500).json({ error: "Failed to get events" });
   }
@@ -127,11 +128,17 @@ router.get("/:id", async (req, res) => {
   try {
     const event = await Event.findById(id);
     if (!event) return res.status(404).json({ error: "Event not found" });
+
+    const eventGallery = await EventGallery.find({ eventId: id }, { image: 1 });
+
+    if (eventGallery.length > 0) {
+      event._doc.images = eventGallery;
+    }
     res
       .status(200)
       .json({ ...event._doc, status: getEventStatus(event.dateTime) });
   } catch (error) {
-    res.status(500).json({ error: "Failed to get event" });
+    res.status(500).json({ error: "Failed to get event" + error });
   }
 });
 
