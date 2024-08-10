@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/create', authorization, async (req, res) => {
     const { eventId, status } = req.body;
     const userId = req.user.id;
-    const actualAttendance = (status == 'accepted') ? true : false;
+    const actualAttendance = (status === 'accepted'); // Simplified boolean assignment
     try {
         const existingAttendance = await EventAttendance.findOne({ eventId, userId });
         if (existingAttendance) {
@@ -18,6 +18,7 @@ router.post('/create', authorization, async (req, res) => {
         await attendance.save();
         res.status(201).json({ message: 'Attendance recorded successfully', attendance });
     } catch (error) {
+        console.error('Failed to record attendance:', error);
         res.status(500).json({ error: 'Failed to record attendance' });
     }
 });
@@ -33,7 +34,7 @@ router.put('/actual/:id', authorization, async (req, res) => {
         await attendance.save();
         res.status(200).json({ message: 'Actual attendance updated successfully' });
     } catch (error) {
-        console.log(error);
+        console.error('Failed to update actual attendance:', error);
         res.status(500).json({ error: 'Failed to update actual attendance' });
     }
 });
@@ -42,10 +43,12 @@ router.put('/actual/:id', authorization, async (req, res) => {
 router.get('/event/:eventId', authorization, async (req, res) => {
     const { eventId } = req.params;
     try {
-        const attendance = await EventAttendance.find({ eventId, userId: req.user.id }).populate('userId', 'name email');
+        // Fetch all attendance records for the event, regardless of user
+        const attendance = await EventAttendance.find({ eventId }).populate('userId', 'name email');
         res.status(200).json(attendance);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to get attendance' + error });
+        console.error('Failed to get attendance:', error);
+        res.status(500).json({ error: 'Failed to get attendance' });
     }
 });
 
