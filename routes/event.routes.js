@@ -123,6 +123,24 @@ router.get("/all", async (req, res) => {
 });
 
 // Get a single event by ID
+// router.get("/:id", async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const event = await Event.findById(id);
+//     if (!event) return res.status(404).json({ error: "Event not found" });
+
+//     const eventGallery = await EventGallery.find({ eventId: id }, { image: 1 });
+
+//     if (eventGallery.length > 0) {
+//       event._doc.images = eventGallery;
+//     }
+//     res
+//       .status(200)
+//       .json({ ...event._doc, status: getEventStatus(event.dateTime) });
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to get event" + error });
+//   }
+// });
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -131,9 +149,8 @@ router.get("/:id", async (req, res) => {
 
     const eventGallery = await EventGallery.find({ eventId: id }, { image: 1 });
 
-    if (eventGallery.length > 0) {
-      event._doc.images = eventGallery;
-    }
+    event._doc.images = eventGallery.length > 0 ? eventGallery : [];
+
     res
       .status(200)
       .json({ ...event._doc, status: getEventStatus(event.dateTime) });
@@ -141,5 +158,4 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to get event" + error });
   }
 });
-
 module.exports = router;
