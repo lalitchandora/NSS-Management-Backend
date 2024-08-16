@@ -18,6 +18,6 @@ router.use('/media', mediaRoutes);
 router.use('/profile', userRoutes);
 router.use('/gallery', galleryRoutes);
 router.use('/reports', reportRoutes);
-router.use('/posts', postRoutes); 
+router.use('/posts', postRoutes);
 router.use('/certificate', certificateRoutes)
 module.exports = router;
